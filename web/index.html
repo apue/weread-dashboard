@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><title>阅读之间 · WeRead Dashboard</title><link rel="stylesheet" href="/styles.css"><script defer src="/app.js"></script></head>
+<body>
+<header class="topbar"><div class="brand"><span class="brand-icon">◫</span><span>阅读之间 <small>WeRead Dashboard</small></span></div><div class="header-actions"><span id="mode" class="badge">本地记录</span><button id="sync" class="button">↻ 同步数据</button></div></header>
+<main>
+  <div class="page-heading"><div><p class="eyebrow">READING JOURNAL</p><h1>让零散的阅读，慢慢积累。</h1><p class="subtitle">看看阅读如何融入日常。</p></div><div class="period"><label for="range">观察范围</label><select id="range"><option value="1">本月</option><option value="3" selected>近 3 个月</option><option value="6">近 6 个月</option><option value="12">近 12 个月</option></select></div></div>
+  <div id="status" role="status" aria-live="polite">正在读取本地记录…</div>
+  <div id="empty" hidden class="empty"><h2>从第一次同步开始</h2><p>将微信读书 API key 填入项目的 .env，然后点击“同步数据”。</p><p>也可以运行 <code>python3 dashboard.py --demo</code> 先看看演示。</p></div>
+  <div id="content" hidden>
+    <section class="metrics" aria-label="阅读概览" id="metrics"></section>
+    <section class="panel weekly-panel"><div class="section-heading"><div><h2>每周的阅读节奏</h2><p>一点一点读，也是一种持续。</p></div><span class="unit">阅读与收听 · 小时</span></div><div id="weekly" class="chart"></div><p id="weekly-note" class="footnote"></p></section>
+    <section class="panel"><div class="section-heading"><div><h2>阅读留下的日常</h2><p id="calendar-subtitle"></p></div><div class="legend"><span>0</span><i class="level0"></i><i class="level1"></i><i class="level2"></i><i class="level3"></i><i class="level4"></i><span>90+ 分钟</span><i class="missing"></i><span>无明细</span></div></div><div id="calendar" class="calendar"></div><p id="day-detail" class="footnote" aria-live="polite">选择一天，查看当天的阅读时长。</p></section>
+    <div class="detail-heading"><div><h2>走近一个月</h2><p>看看时间如何累积，又停留在哪些书中。</p></div><label class="month-label">月份 <select id="month"></select></label></div>
+    <div class="detail-grid">
+      <section class="panel"><div class="section-heading"><h3>时间的积累</h3><span class="unit">累计小时</span></div><div id="cumulative" class="chart"></div><p id="cumulative-note" class="footnote"></p></section>
+      <section class="panel"><div class="section-heading"><h3>时间花在了哪里</h3><span class="unit">本月阅读内容</span></div><div id="books"></div><p class="footnote">接口每月最多返回 10 项，可能省略不足 5 分钟的内容；这里展示前 5 项，不代表完整分布。</p></section>
+    </div>
+    <details class="method"><summary>数据来源与统计口径</summary><div id="source"></div><button id="export" class="button">导出当前范围 JSON</button><p class="footnote">导出文件包含个人阅读记录，请自行保管。</p></details>
+  </div>
+  <footer><span>阅读之间 <span class="footer-dot">·</span> 记录自己的节奏</span><span id="updated"></span></footer>
+</main>
+</body></html>
