@@ -119,7 +119,7 @@ node tests/shelf_frontend.cjs
 node tests/detail_motion.cjs
 ```
 
-视觉回归可运行 `python3 tests/detail_visual_server.py --port 8777 --get-delay-ms 300 --sync-delay-ms 1500 --long-intro --long-title`，打开输出地址后点书，检查加载各阶段是否稳定。该工具仅使用虚构演示数据；延迟、慢放及逐帧探针不会进入正常应用，使用方法与本轮结果见 [详情稳定性验收](docs/detail-stability-acceptance.md)。
+视觉回归可运行 `python3 tests/detail_visual_server.py --port 8777 --get-delay-ms 300 --sync-delay-ms 1500 --long-intro --long-title`，打开输出地址后点书，检查加载各阶段是否稳定。该工具仅使用虚构演示数据；延迟、慢放及逐帧探针不会进入正常应用，使用方法与结果见 [详情稳定性验收](docs/detail-stability-acceptance.md)。开闭浮层的背景横向位移已另行修复，复现方法与逐帧证据见 [页面滚动条修复验收](docs/viewport-scrollbar-fix.md)。
 
 测试涵盖跨月/闰年日期、未来日期与缺失明细、权威总量、响应校验、演示隔离、敏感路径拒绝、跨站请求拒绝、升级中断与失败缓存保留。CI 在 Python 3.11 / 3.13 上运行离线测试，无需密钥。
 

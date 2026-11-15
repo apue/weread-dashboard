@@ -49,7 +49,7 @@ python3 tests/detail_visual_server.py --port 8777 --get-delay-ms 1500 --sync-del
 # 失败重试：追加 --fail-sync-once；进度预热不消耗故意失败的次数
 ```
 
-点击书卡片后，四秒采样保存在页面隐藏的 #detail-visual-samples 文本中。测试服务不加载密钥、私有缓存或上游接口；本轮临时诊断服务已在验收后停止。
+点击书卡片后的采样保存在页面隐藏的 #detail-visual-samples 文本中。后续探针已扩展为打开前、打开期间最多六秒、关闭后一点五秒，并将卡片字段放到 `card` 下，详见 [页面滚动条修复验收](viewport-scrollbar-fix.md)。测试服务不加载密钥、私有缓存或上游接口；本轮临时诊断服务已在验收后停止。
 
 ## 演示截图
 

@@ -39,7 +39,7 @@ PROBE_JS = r'''(() => {
   output.setAttribute('aria-hidden', 'true');
   document.body.append(output);
   const samples = [];
-  let observer;
+  let observer, generation = 0;
   const stage = () => {
     const body = document.getElementById('detail-body');
     if (!body) return 'no-detail';
@@ -50,43 +50,73 @@ PROBE_JS = r'''(() => {
     if (/暂无简介|推荐值|笔记/.test(text)) return 'detail-content';
     return 'empty';
   };
-  const sample = start => {
+  const geometry = phase => {
+    const root = document.documentElement;
+    const rect = selector => {
+      const node = document.querySelector(selector);
+      if (!node) return null;
+      const r = node.getBoundingClientRect();
+      return { left:r.left, top:r.top, right:r.right, bottom:r.bottom, width:r.width, height:r.height };
+    };
     const dialog = document.getElementById('book-dialog');
     const frame = dialog?.querySelector('.detail-frame') || dialog?.querySelector('.detail-sheet');
     const close = document.getElementById('detail-close');
-    if (frame) {
-      const r = frame.getBoundingClientRect();
-      const c = close?.getBoundingClientRect();
-      const cs = getComputedStyle(frame);
-      samples.push({
-        t: Math.round(performance.now() - start),
-        width: frame.offsetWidth, height: frame.offsetHeight,
-        centerX: (r.left + r.right) / 2, centerY: (r.top + r.bottom) / 2,
-        opacity: cs.opacity, transform: cs.transform,
-        close: c ? { left: c.left, top: c.top, right: c.right, bottom: c.bottom } : null,
-        pageY: window.scrollY, stage: stage(), bodyTextLength: document.getElementById('detail-body')?.textContent.length || 0,
-        introText: (document.querySelector('#detail-body section p')?.textContent || '').slice(0, 100)
-      });
-      output.textContent = JSON.stringify(samples);
-    }
-    if (performance.now() - start < 4000) requestAnimationFrame(() => sample(start));
+    const c = close?.getBoundingClientRect();
+    const r = frame?.getBoundingClientRect();
+    const cs = frame ? getComputedStyle(frame) : null;
+    const body = document.getElementById('detail-body');
+    return {
+      phase, time: Math.round(performance.now()), rootClientWidth: root.clientWidth,
+      innerWidth: window.innerWidth, gutter: window.innerWidth - root.clientWidth,
+      body: rect('body'), main: rect('main'), heading: rect('.shelf-heading, .page-heading'),
+      bookWall: rect('#book-wall'), brand: rect('.brand'),
+      card: r ? { left:r.left, top:r.top, right:r.right, bottom:r.bottom, width:frame.offsetWidth, height:frame.offsetHeight,
+        centerX:(r.left+r.right)/2, centerY:(r.top+r.bottom)/2, opacity:cs.opacity, transform:cs.transform } : null,
+      close: c ? { left:c.left, top:c.top, right:c.right, bottom:c.bottom } : null,
+      pageY: window.scrollY, stage: stage(), bodyTextLength: body?.textContent.length || 0,
+      introText: (document.querySelector('#detail-body section p')?.textContent || '').slice(0, 100)
+    };
+  };
+  const write = sample => { samples.push(sample); output.textContent = JSON.stringify(samples); };
+  const sampleOpen = (start, id) => {
+    if (id !== generation || !document.getElementById('book-dialog')?.open) return;
+    write({ ...geometry('open'), elapsed: Math.round(performance.now() - start) });
+    if (performance.now() - start < 6000) requestAnimationFrame(() => sampleOpen(start, id));
+  };
+  const sampleClosed = (start, id) => {
+    if (id !== generation) return;
+    write({ ...geometry('closed'), elapsed: Math.round(performance.now() - start) });
+    if (performance.now() - start < 1500) requestAnimationFrame(() => sampleClosed(start, id));
   };
   document.addEventListener('click', event => {
     if (!event.target.closest('[data-book-id]')) return;
     samples.length = 0;
+    const id = ++generation;
     const start = performance.now();
+    write(geometry('before-open'));
     if (observer) observer.disconnect();
     observer = new MutationObserver(() => { output.dataset.stage = stage(); });
     observer.observe(document.getElementById('detail-body') || document.body, { childList: true, subtree: true, characterData: true });
-    requestAnimationFrame(() => sample(start));
+    requestAnimationFrame(() => sampleOpen(start, id));
   }, true);
+  document.getElementById('book-dialog')?.addEventListener('close', () => {
+    const id = ++generation;
+    const start = performance.now();
+    requestAnimationFrame(() => sampleClosed(start, id));
+  });
 })();
 '''
+
+PROBE_CSS = {
+    'classic': '::-webkit-scrollbar { width: 16px; height: 16px; }\n',
+    'zero': '::-webkit-scrollbar { width: 0; height: 0; }\n',
+}
 
 
 def build_server(port: int, get_delay_ms: int, sync_delay_ms: int,
                  long_intro: bool, long_title: bool, slow_motion: float,
-                 baseline_ref: str | None = None, fail_sync_once: bool = False):
+                 baseline_ref: str | None = None, fail_sync_once: bool = False,
+                 classic_scrollbar: bool = False, zero_scrollbar: bool = False):
     # handler_for(None, demo=True) bypasses Store, key loading, and upstream API.
     base = dashboard.handler_for(None, demo=True)
     original_shelf = dashboard.demo_shelf
@@ -125,6 +155,9 @@ def build_server(port: int, get_delay_ms: int, sync_delay_ms: int,
             route = urlsplit(self.path).path
             if route == '/__detail_probe.js':
                 return self.reply(200, PROBE_JS.encode(), 'text/javascript; charset=utf-8')
+            if route == '/__detail_probe.css' and (classic_scrollbar or zero_scrollbar):
+                mode = 'classic' if classic_scrollbar else 'zero'
+                return self.reply(200, PROBE_CSS[mode].encode(), 'text/css; charset=utf-8')
             if route == '/':
                 original_path = self.path
                 self.path = '/'
@@ -135,6 +168,8 @@ def build_server(port: int, get_delay_ms: int, sync_delay_ms: int,
                 html = baseline_assets.get('/', (dashboard.ROOT / 'web' / 'index.html').read_bytes()).decode('utf-8')
                 html = html.replace('<script defer src="/shelf.js"></script>',
                                     '<script defer src="/__detail_probe.js"></script><script defer src="/shelf.js"></script>')
+                if classic_scrollbar or zero_scrollbar:
+                    html = html.replace('</head>', '<link rel="stylesheet" href="/__detail_probe.css"></head>')
                 return self.reply(200, html.encode(), 'text/html; charset=utf-8')
             if route in baseline_assets and route != '/':
                 kind = 'text/javascript; charset=utf-8' if route.endswith('.js') else 'text/css; charset=utf-8'
@@ -172,14 +207,18 @@ def main():
     parser.add_argument('--long-intro', action='store_true', help='serve a long fictional book intro')
     parser.add_argument('--long-title', action='store_true', help='serve a long fictional book title')
     parser.add_argument('--slow-motion', type=float, default=1, help='multiply Element.animate durations in test page only')
-    parser.add_argument('--baseline-ref', choices=('c05d550',), help='serve only this fixed baseline web UI revision')
+    parser.add_argument('--baseline-ref', choices=('c05d550', '567b3dc'), help='serve only a fixed baseline web UI revision')
     parser.add_argument('--fail-sync-once', action='store_true', help='first authorized part=all sync returns 503; retry succeeds')
+    parser.add_argument('--classic-scrollbar', action='store_true', help='inject a 16px WebKit scrollbar rule into this diagnostic page only')
+    parser.add_argument('--zero-scrollbar', action='store_true', help='simulate a zero-width WebKit scrollbar on this diagnostic page only; not an OS overlay-scrollbar test')
     args = parser.parse_args()
     if min(args.get_delay_ms, args.sync_delay_ms) < 0 or args.slow_motion < 1:
         parser.error('delays must be non-negative and slow-motion must be at least 1')
+    if args.classic_scrollbar and args.zero_scrollbar:
+        parser.error('--classic-scrollbar and --zero-scrollbar are mutually exclusive')
     server = build_server(args.port, args.get_delay_ms, args.sync_delay_ms,
                           args.long_intro, args.long_title, args.slow_motion, args.baseline_ref,
-                          args.fail_sync_once)
+                          args.fail_sync_once, args.classic_scrollbar, args.zero_scrollbar)
     print(f'Detail visual demo: http://127.0.0.1:{server.server_port}/?slow={args.slow_motion} (fictional data only)', flush=True)
     try:
         server.serve_forever()
