@@ -18,4 +18,6 @@ jobs:
         with:
           node-version: '22'
       - run: node --check web/app.js
+      - run: node --check web/shelf.js
       - run: node tests/frontend.cjs
+      - run: node tests/shelf_frontend.cjs
