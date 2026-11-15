@@ -4,10 +4,10 @@ const vm = require('node:vm');
 const assert = require('node:assert/strict');
 
 class Element {
-  constructor(id='') { this.id=id; this.value=id==='shelf-search'?'':id==='shelf-sort'?'recent':'all'; this.hidden=false; this.disabled=false; this.textContent=''; this.innerHTML=''; this.events={}; this.attrs={}; this.dataset={}; this.isConnected=true; this.classList={add(){},remove(){}}; }
+  constructor(id='') { this.id=id; this.value=id==='shelf-search'?'':id==='shelf-sort'?'recent':'all'; this.hidden=false; this.disabled=false; this.textContent=''; this.innerHTML=''; this.events={}; this.attrs={}; this.dataset={}; this.isConnected=true; this.animations=[]; this.classList={add(){},remove(){}}; }
   addEventListener(type,fn){(this.events[type]??=[]).push(fn);}
   setAttribute(k,v){this.attrs[k]=v;}
-  querySelector(sel){ if(sel==='.detail-sheet') return sheet; if(sel==='.cover-art')return new Element(); return new Element(); }
+  querySelector(sel){ if(sel==='.detail-sheet') return sheet; if(sel==='.detail-frame')return frame; if(sel==='.dialog-backdrop')return backdrop; if(sel==='.cover-art')return new Element(); return new Element(); }
   querySelectorAll(){return [];}
   get options(){return [...this.innerHTML.matchAll(/<option value="([^"]*)"/g)].map(m=>({value:m[1]}));}
   closest(sel){return this.closestTarget?.[sel]||null;}
@@ -15,11 +15,11 @@ class Element {
   close(){this.open=false;}
   focus(options){this.focusOptions=options;}
   getBoundingClientRect(){return {left:0,top:0};}
-  animate(_frames, options={}){const animation={options,cancel(){},finished:Promise.resolve()};return animation;}
+  animate(frames, options={}){const animation={frames,options,cancel(){},finished:Promise.resolve()};this.animations.push(animation);return animation;}
   hasAttribute(){return false;}
   insertAdjacentHTML(_where,html){this.innerHTML+=html;}
 }
-const sheet=new Element('sheet');
+const sheet=new Element('sheet'),frame=new Element('frame'),backdrop=new Element('backdrop');
 const elements=new Map();
 const get=id=>{if(!elements.has(id))elements.set(id,new Element(id));return elements.get(id);};
 const docEvents={};
@@ -70,9 +70,12 @@ const tick=()=>new Promise(r=>setImmediate(r));
   const dispatch=id=>{const card=id==='book:1'?card1:card2;const target={closest:sel=>sel==='[data-book-id]'?card:null};docEvents.click[0]({target});};
   dispatch('book:1'); dispatch('book:2');
   await tick();
+  assert.match(get('detail-body').innerHTML,/正在读取简介/,'new details start with an explicit loading placeholder');
+  const openingAnimations=frame.animations.length;
   detailResolvers['book:1'](); await tick();
   assert.equal(get('detail-title').textContent,'Beta','opening a second book updates active dialog title');
   detailResolvers['book:2'](); await tick();
+  assert.equal(frame.animations.length,openingAnimations,'async detail data updates do not replay the card entrance');
   assert.match(get('detail-body').innerHTML,/想法\/点评 3 · 书签 5 · 划线 2 · 合计 10/,'note fields retain their distinct meanings');
   assert.match(get('detail-body').innerHTML,/微信读书推荐值/);
   assert.match(get('detail-body').innerHTML,/76\.5%/,'upstream recommendation value 765 is displayed as 76.5 percent');
