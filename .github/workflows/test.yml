@@ -21,3 +21,4 @@ jobs:
       - run: node --check web/shelf.js
       - run: node tests/frontend.cjs
       - run: node tests/shelf_frontend.cjs
+      - run: node tests/detail_motion.cjs

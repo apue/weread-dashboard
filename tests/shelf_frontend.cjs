@@ -15,7 +15,7 @@ class Element {
   close(){this.open=false;}
   focus(options){this.focusOptions=options;}
   getBoundingClientRect(){return {left:0,top:0};}
-  animate(){}
+  animate(_frames, options={}){const animation={options,cancel(){},finished:Promise.resolve()};return animation;}
   hasAttribute(){return false;}
   insertAdjacentHTML(_where,html){this.innerHTML+=html;}
 }
@@ -86,6 +86,7 @@ const tick=()=>new Promise(r=>setImmediate(r));
   assert.equal(calls.filter(x=>x.url.startsWith('/api/book?id=')).length,3,'after note sync, active book notes are reloaded');
   detailResolvers['book:2'](); await tick();
   events('detail-close','click')();
+  await tick();
   assert.equal(get('book-dialog').open,false,'close button dismisses detail');
   assert.equal(card2.focusOptions?.preventScroll,true,'focus returns to the invoking book card without scrolling');
   dispatch('album:3'); await tick();

@@ -2,6 +2,8 @@
 
 日期：2026-11-15。状态：实现及 root 技术验收完成，等待用户体验验收；不得合入 main。
 
+本记录保留首版验收证据；其中侧栏、封面飞行动效与手机底部展开已由后续 [居中详情卡验收](centered-detail-acceptance.md) 替代。
+
 ## 分支与分工
 
 - GitHub API 核对远端 main 和 feat/reading-dashboard 均指向 275b04b，原 dashboard 已在 main，无需重复合并。

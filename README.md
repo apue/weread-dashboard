@@ -8,7 +8,7 @@
 
 - 动态书架、继续阅读、封面和书籍详情；本地搜索、排序及组合筛选。
 - 打开书架先显示缓存，再自动同步；也可手动同步，排序与筛选不查询微信读书。
-- 封面按需保存到本地，详情与进度分别缓存；桌面展开详情，手机底部面板。
+- 封面按需保存到本地，详情与进度分别缓存；桌面与手机均使用居中浮现的详情卡片。
 - 每周阅读与收听时长趋势，以及每周有效阅读天数（悬停查看）。
 - 每日阅读热力图，点击日期查看具体时长。
 - 累计时长、有效阅读天数、自然日均与有效日均。
@@ -111,11 +111,12 @@ python3 dashboard.py
 
 ```sh
 python3 -m unittest discover -s tests -v
-# 可选，需要 Node.js；仅做前端语法检查
+# 前端检查需要 Node.js；运行应用不需要
 node --check web/app.js
 node --check web/shelf.js
 node tests/frontend.cjs
 node tests/shelf_frontend.cjs
+node tests/detail_motion.cjs
 ```
 
 测试涵盖跨月/闰年日期、未来日期与缺失明细、权威总量、响应校验、演示隔离、敏感路径拒绝、跨站请求拒绝、升级中断与失败缓存保留。CI 在 Python 3.11 / 3.13 上运行离线测试，无需密钥。
@@ -130,7 +131,7 @@ tests/                离线单元与 HTTP 集成测试
 test_connection.py    只读搜索连通性测试
 ```
 
-改进建议与贡献见 [CONTRIBUTING.md](CONTRIBUTING.md)。范围保持本地单用户；阅读统计查询最近 12 个月，书架打开时自动同步。更长统计历史、自定义日期和更多导出格式可继续讨论。动态书架的完整需求和验收约定见 [设计文档](docs/dynamic-bookshelf.md)。
+改进建议与贡献见 [CONTRIBUTING.md](CONTRIBUTING.md)。范围保持本地单用户；阅读统计查询最近 12 个月，书架打开时自动同步。更长统计历史、自定义日期和更多导出格式可继续讨论。动态书架的完整需求和验收约定见 [设计文档](docs/dynamic-bookshelf.md)，当前详情布局见 [居中详情卡设计与验收](docs/centered-detail.md)。
 
 ## 声明与许可
 
