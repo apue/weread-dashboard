@@ -1,0 +1,298 @@
+{
+  "date": "2026-11-15",
+  "method": "Chrome requestAnimationFrame sampling via local fictional-data harness; opacity/scale only; geometry read from DOM",
+  "cases": [
+    {
+      "centerX": [
+        959.9999389648438,
+        960.000030517578
+      ],
+      "centerY": [
+        453.5,
+        461.50001525878906
+      ],
+      "closeTopAfterEntry": [
+        45,
+        208.32421875
+      ],
+      "frames": 103,
+      "heights": [
+        516,
+        604,
+        843
+      ],
+      "lastT": 4028,
+      "pageY": [
+        70.5
+      ],
+      "stageSamples": {
+        "cached-data": {
+          "centerY": 453.5,
+          "closeTop": 164.734375,
+          "height": 604,
+          "t": 1529
+        },
+        "fresh-data": {
+          "centerY": 453.5,
+          "closeTop": 45,
+          "height": 843,
+          "t": 1864
+        },
+        "loading": {
+          "centerY": 461.50001525878906,
+          "closeTop": 223.6794891357422,
+          "height": 516,
+          "t": 28
+        }
+      },
+      "stages": [
+        "loading",
+        "cached-data",
+        "fresh-data"
+      ],
+      "viewport": [
+        1920,
+        907
+      ],
+      "widths": [
+        850
+      ],
+      "label": "baseline c05d550 GET1500 sync300"
+    },
+    {
+      "centerX": [
+        959.9999389648438,
+        960.0000610351562
+      ],
+      "centerY": [
+        481.4999694824219,
+        481.5000305175781
+      ],
+      "closeTopAfterEntry": [
+        184.5,
+        184.5
+      ],
+      "frames": 98,
+      "heights": [
+        620
+      ],
+      "lastT": 4055,
+      "pageY": [
+        42.5
+      ],
+      "stageSamples": {
+        "cached-data": {
+          "centerY": 481.5,
+          "closeTop": 184.5,
+          "height": 620,
+          "t": 1558
+        },
+        "fresh-data": {
+          "centerY": 481.5,
+          "closeTop": 184.5,
+          "height": 620,
+          "t": 1859
+        },
+        "loading": {
+          "centerY": 481.5000305175781,
+          "closeTop": 187.47000122070312,
+          "height": 620,
+          "t": 23
+        }
+      },
+      "stages": [
+        "loading",
+        "cached-data",
+        "fresh-data"
+      ],
+      "viewport": [
+        1920,
+        963
+      ],
+      "widths": [
+        850
+      ],
+      "label": "fixed desktop GET1500 sync300"
+    },
+    {
+      "centerX": [
+        194.99998474121097,
+        195.00001525878903
+      ],
+      "centerY": [
+        422,
+        422.0000305175781
+      ],
+      "closeTopAfterEntry": [
+        105,
+        105
+      ],
+      "frames": 104,
+      "heights": [
+        660
+      ],
+      "lastT": 4030,
+      "pageY": [
+        103.5
+      ],
+      "stageSamples": {
+        "cached-data": {
+          "centerY": 422,
+          "closeTop": 105,
+          "height": 660,
+          "t": 364
+        },
+        "fresh-data": {
+          "centerY": 422,
+          "closeTop": 105,
+          "height": 660,
+          "t": 1863
+        },
+        "loading": {
+          "centerY": 422,
+          "closeTop": 108.16999053955078,
+          "height": 660,
+          "t": 30
+        }
+      },
+      "stages": [
+        "loading",
+        "cached-data",
+        "fresh-data"
+      ],
+      "viewport": [
+        390,
+        844
+      ],
+      "widths": [
+        358
+      ],
+      "label": "fixed long-title mobile GET300 sync1500"
+    },
+    {
+      "centerX": [
+        194.99998474121097,
+        195.00001525878903
+      ],
+      "centerY": [
+        279.9999694824219,
+        280.0000305175781
+      ],
+      "closeTopAfterEntry": [
+        33,
+        33
+      ],
+      "frames": 104,
+      "heights": [
+        520
+      ],
+      "lastT": 4020,
+      "pageY": [
+        245.5
+      ],
+      "stageSamples": {
+        "cached-data": {
+          "centerY": 280,
+          "closeTop": 33,
+          "height": 520,
+          "t": 321
+        },
+        "fresh-data": {
+          "centerY": 280,
+          "closeTop": 33,
+          "height": 520,
+          "t": 1856
+        },
+        "loading": {
+          "centerY": 280.0000305175781,
+          "closeTop": 35.47000503540039,
+          "height": 520,
+          "t": 21
+        }
+      },
+      "stages": [
+        "loading",
+        "cached-data",
+        "fresh-data"
+      ],
+      "viewport": [
+        390,
+        560
+      ],
+      "widths": [
+        358
+      ],
+      "label": "fixed short mobile GET300 sync1500"
+    },
+    {
+      "centerX": [
+        499.9999694824219,
+        500.0000305175781
+      ],
+      "centerY": [
+        269.99998474121094,
+        270
+      ],
+      "closeTopAfterEntry": [
+        45,
+        45
+      ],
+      "frames": 105,
+      "heights": [
+        476
+      ],
+      "lastT": 4026,
+      "pageY": [
+        254
+      ],
+      "stageSamples": {
+        "fresh-data": {
+          "centerY": 270,
+          "closeTop": 47.19475555419922,
+          "height": 476,
+          "t": 61
+        },
+        "loading": {
+          "centerY": 270,
+          "closeTop": 47.250003814697266,
+          "height": 476,
+          "t": 26
+        }
+      },
+      "stages": [
+        "loading",
+        "fresh-data"
+      ],
+      "viewport": [
+        1000,
+        540
+      ],
+      "widths": [
+        850
+      ],
+      "label": "fixed short desktop GET0 sync0"
+    }
+  ],
+  "slowMotion3xSamples": [
+    {
+      "opacity": 0.0697158,
+      "scale": "matrix(0.990697, 0, 0, 0.990697, 0, 0)"
+    },
+    {
+      "opacity": 0.180388,
+      "scale": "matrix(0.991804, 0, 0, 0.991804, 0, 0)"
+    },
+    {
+      "opacity": 0.285628,
+      "scale": "matrix(0.992856, 0, 0, 0.992856, 0, 0)"
+    },
+    {
+      "opacity": 0.404924,
+      "scale": "matrix(0.994049, 0, 0, 0.994049, 0, 0)"
+    },
+    {
+      "opacity": 0.467996,
+      "scale": "matrix(0.99468, 0, 0, 0.99468, 0, 0)"
+    }
+  ]
+}

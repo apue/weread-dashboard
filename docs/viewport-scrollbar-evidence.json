@@ -1,0 +1,697 @@
+{
+  "baseline": "567b3dc",
+  "browser": "Chrome",
+  "notes": [
+    "classic16 is a test-only CSS scrollbar rule; initial measured gutter was 16px",
+    "default browser measured 15px even without custom scrollbar CSS",
+    "zero-width is test-only CSS simulation, not actual OS overlay validation",
+    "root.clientWidth changes while the reserved layout gutter keeps body/main stable",
+    "background wheel kept mobile pageY at 372.5; focus returned to clicked book"
+  ],
+  "cases": [
+    {
+      "phases": {
+        "before-open": {
+          "bodyWidths": [
+            1424
+          ],
+          "bookWallX": [
+            122,
+            122
+          ],
+          "brandX": [
+            130,
+            130
+          ],
+          "frames": 1,
+          "gutter": [
+            16
+          ],
+          "headingX": [
+            122,
+            122
+          ],
+          "mainWidth": [
+            1180,
+            1180
+          ],
+          "mainX": [
+            122,
+            122
+          ],
+          "pageY": [
+            74
+          ],
+          "rootClientWidths": [
+            1424
+          ]
+        },
+        "closed": {
+          "bodyWidths": [
+            1424
+          ],
+          "bookWallX": [
+            122,
+            122
+          ],
+          "brandX": [
+            130,
+            130
+          ],
+          "frames": 41,
+          "gutter": [
+            16
+          ],
+          "headingX": [
+            122,
+            122
+          ],
+          "mainWidth": [
+            1180,
+            1180
+          ],
+          "mainX": [
+            122,
+            122
+          ],
+          "pageY": [
+            74
+          ],
+          "rootClientWidths": [
+            1424
+          ]
+        },
+        "open": {
+          "bodyWidths": [
+            1440
+          ],
+          "bookWallX": [
+            130,
+            130
+          ],
+          "brandX": [
+            130,
+            130
+          ],
+          "frames": 154,
+          "gutter": [
+            0
+          ],
+          "headingX": [
+            130,
+            130
+          ],
+          "mainWidth": [
+            1180,
+            1180
+          ],
+          "mainX": [
+            130,
+            130
+          ],
+          "pageY": [
+            74
+          ],
+          "rootClientWidths": [
+            1440
+          ]
+        }
+      },
+      "viewport": [
+        1440,
+        900
+      ],
+      "label": "baseline 567b3dc classic16"
+    },
+    {
+      "phases": {
+        "before-open": {
+          "bodyWidths": [
+            1424
+          ],
+          "bookWallX": [
+            122,
+            122
+          ],
+          "brandX": [
+            130,
+            130
+          ],
+          "frames": 1,
+          "gutter": [
+            16
+          ],
+          "headingX": [
+            122,
+            122
+          ],
+          "mainWidth": [
+            1180,
+            1180
+          ],
+          "mainX": [
+            122,
+            122
+          ],
+          "pageY": [
+            74
+          ],
+          "rootClientWidths": [
+            1424
+          ]
+        },
+        "closed": {
+          "bodyWidths": [
+            1424
+          ],
+          "bookWallX": [
+            122,
+            122
+          ],
+          "brandX": [
+            130,
+            130
+          ],
+          "frames": 43,
+          "gutter": [
+            16
+          ],
+          "headingX": [
+            122,
+            122
+          ],
+          "mainWidth": [
+            1180,
+            1180
+          ],
+          "mainX": [
+            122,
+            122
+          ],
+          "pageY": [
+            74
+          ],
+          "rootClientWidths": [
+            1424
+          ]
+        },
+        "open": {
+          "bodyWidths": [
+            1424
+          ],
+          "bookWallX": [
+            122,
+            122
+          ],
+          "brandX": [
+            130,
+            130
+          ],
+          "frames": 168,
+          "gutter": [
+            0
+          ],
+          "headingX": [
+            122,
+            122
+          ],
+          "mainWidth": [
+            1180,
+            1180
+          ],
+          "mainX": [
+            122,
+            122
+          ],
+          "pageY": [
+            74
+          ],
+          "rootClientWidths": [
+            1440
+          ]
+        }
+      },
+      "viewport": [
+        1440,
+        900
+      ],
+      "label": "fixed classic16 Esc"
+    },
+    {
+      "phases": {
+        "before-open": {
+          "bodyWidths": [
+            1425
+          ],
+          "bookWallX": [
+            122.5,
+            122.5
+          ],
+          "brandX": [
+            122.5,
+            122.5
+          ],
+          "frames": 1,
+          "gutter": [
+            15
+          ],
+          "headingX": [
+            122.5,
+            122.5
+          ],
+          "mainWidth": [
+            1180,
+            1180
+          ],
+          "mainX": [
+            122.5,
+            122.5
+          ],
+          "pageY": [
+            74
+          ],
+          "rootClientWidths": [
+            1425
+          ]
+        },
+        "closed": {
+          "bodyWidths": [
+            1425
+          ],
+          "bookWallX": [
+            122.5,
+            122.5
+          ],
+          "brandX": [
+            122.5,
+            122.5
+          ],
+          "frames": 2,
+          "gutter": [
+            15
+          ],
+          "headingX": [
+            122.5,
+            122.5
+          ],
+          "mainWidth": [
+            1180,
+            1180
+          ],
+          "mainX": [
+            122.5,
+            122.5
+          ],
+          "pageY": [
+            74
+          ],
+          "rootClientWidths": [
+            1425
+          ]
+        },
+        "open": {
+          "bodyWidths": [
+            1425
+          ],
+          "bookWallX": [
+            122.5,
+            122.5
+          ],
+          "brandX": [
+            122.5,
+            122.5
+          ],
+          "frames": 165,
+          "gutter": [
+            0
+          ],
+          "headingX": [
+            122.5,
+            122.5
+          ],
+          "mainWidth": [
+            1180,
+            1180
+          ],
+          "mainX": [
+            122.5,
+            122.5
+          ],
+          "pageY": [
+            74
+          ],
+          "rootClientWidths": [
+            1440
+          ]
+        }
+      },
+      "viewport": [
+        1440,
+        900
+      ],
+      "label": "fixed default15 button"
+    },
+    {
+      "phases": {
+        "before-open": {
+          "bodyWidths": [
+            1424
+          ],
+          "bookWallX": [
+            122,
+            122
+          ],
+          "brandX": [
+            130,
+            130
+          ],
+          "frames": 1,
+          "gutter": [
+            16
+          ],
+          "headingX": [
+            122,
+            122
+          ],
+          "mainWidth": [
+            1180,
+            1180
+          ],
+          "mainX": [
+            122,
+            122
+          ],
+          "pageY": [
+            74
+          ],
+          "rootClientWidths": [
+            1424
+          ]
+        },
+        "closed": {
+          "bodyWidths": [
+            1424
+          ],
+          "bookWallX": [
+            122,
+            122
+          ],
+          "brandX": [
+            130,
+            130
+          ],
+          "frames": 43,
+          "gutter": [
+            16
+          ],
+          "headingX": [
+            122,
+            122
+          ],
+          "mainWidth": [
+            1180,
+            1180
+          ],
+          "mainX": [
+            122,
+            122
+          ],
+          "pageY": [
+            74
+          ],
+          "rootClientWidths": [
+            1424
+          ]
+        },
+        "open": {
+          "bodyWidths": [
+            1424
+          ],
+          "bookWallX": [
+            122,
+            122
+          ],
+          "brandX": [
+            130,
+            130
+          ],
+          "frames": 168,
+          "gutter": [
+            0
+          ],
+          "headingX": [
+            122,
+            122
+          ],
+          "mainWidth": [
+            1180,
+            1180
+          ],
+          "mainX": [
+            122,
+            122
+          ],
+          "pageY": [
+            74
+          ],
+          "rootClientWidths": [
+            1440
+          ]
+        }
+      },
+      "viewport": [
+        1440,
+        900
+      ],
+      "label": "fixed classic16 repeated backdrop settled"
+    },
+    {
+      "phases": {
+        "before-open": {
+          "bodyWidths": [
+            1440
+          ],
+          "bookWallX": [
+            130,
+            130
+          ],
+          "brandX": [
+            130,
+            130
+          ],
+          "frames": 1,
+          "gutter": [
+            0
+          ],
+          "headingX": [
+            130,
+            130
+          ],
+          "mainWidth": [
+            1180,
+            1180
+          ],
+          "mainX": [
+            130,
+            130
+          ],
+          "pageY": [
+            74
+          ],
+          "rootClientWidths": [
+            1440
+          ]
+        },
+        "closed": {
+          "bodyWidths": [
+            1440
+          ],
+          "bookWallX": [
+            130,
+            130
+          ],
+          "brandX": [
+            130,
+            130
+          ],
+          "frames": 39,
+          "gutter": [
+            0
+          ],
+          "headingX": [
+            130,
+            130
+          ],
+          "mainWidth": [
+            1180,
+            1180
+          ],
+          "mainX": [
+            130,
+            130
+          ],
+          "pageY": [
+            74
+          ],
+          "rootClientWidths": [
+            1440
+          ]
+        },
+        "open": {
+          "bodyWidths": [
+            1440
+          ],
+          "bookWallX": [
+            130,
+            130
+          ],
+          "brandX": [
+            130,
+            130
+          ],
+          "frames": 138,
+          "gutter": [
+            0
+          ],
+          "headingX": [
+            130,
+            130
+          ],
+          "mainWidth": [
+            1180,
+            1180
+          ],
+          "mainX": [
+            130,
+            130
+          ],
+          "pageY": [
+            74
+          ],
+          "rootClientWidths": [
+            1440
+          ]
+        }
+      },
+      "viewport": [
+        1440,
+        900
+      ],
+      "label": "fixed zero-width simulation desktop"
+    },
+    {
+      "phases": {
+        "before-open": {
+          "bodyWidths": [
+            390
+          ],
+          "bookWallX": [
+            18,
+            18
+          ],
+          "brandX": [
+            18,
+            18
+          ],
+          "frames": 1,
+          "gutter": [
+            0
+          ],
+          "headingX": [
+            18,
+            18
+          ],
+          "mainWidth": [
+            354,
+            354
+          ],
+          "mainX": [
+            18,
+            18
+          ],
+          "pageY": [
+            372.5
+          ],
+          "rootClientWidths": [
+            390
+          ]
+        },
+        "closed": {
+          "bodyWidths": [
+            390
+          ],
+          "bookWallX": [
+            18,
+            18
+          ],
+          "brandX": [
+            18,
+            18
+          ],
+          "frames": 44,
+          "gutter": [
+            0
+          ],
+          "headingX": [
+            18,
+            18
+          ],
+          "mainWidth": [
+            354,
+            354
+          ],
+          "mainX": [
+            18,
+            18
+          ],
+          "pageY": [
+            372.5
+          ],
+          "rootClientWidths": [
+            390
+          ]
+        },
+        "open": {
+          "bodyWidths": [
+            390
+          ],
+          "bookWallX": [
+            18,
+            18
+          ],
+          "brandX": [
+            18,
+            18
+          ],
+          "frames": 169,
+          "gutter": [
+            0
+          ],
+          "headingX": [
+            18,
+            18
+          ],
+          "mainWidth": [
+            354,
+            354
+          ],
+          "mainX": [
+            18,
+            18
+          ],
+          "pageY": [
+            372.5
+          ],
+          "rootClientWidths": [
+            390
+          ]
+        }
+      },
+      "viewport": [
+        390,
+        844
+      ],
+      "label": "fixed zero-width simulation mobile button after background wheel"
+    }
+  ]
+}
