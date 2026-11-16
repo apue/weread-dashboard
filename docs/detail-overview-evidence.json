@@ -1,0 +1,847 @@
+{
+  "baseline": "144aead",
+  "browser": "Chrome",
+  "notes": [
+    "classic16 and zero-width scrollbars are diagnostic CSS environments; no OS settings were changed",
+    "responsive expand mobile -> fit desktop -> overflow mobile verified on ordinary demo",
+    "phone wheel scrollTop 844; collapse reset to 0 with intro-toggle focused; pageY stayed 103.5",
+    "phone backdrop close restored focus to book:demo1 and pageY 103.5",
+    "normal speed and three-times slow motion inspected; reduced motion and no WAAPI are offline checks"
+  ],
+  "loadingTiming": {
+    "bodyWidths": [
+      1424
+    ],
+    "centerX": [
+      711.9999694824219,
+      712.0000305175781
+    ],
+    "centerY": [
+      449.9999694824219,
+      450.0000305175781
+    ],
+    "frameHeights": [
+      600
+    ],
+    "frameWidths": [
+      840
+    ],
+    "frames": 155,
+    "mainX": [
+      122,
+      122
+    ],
+    "opacity": [
+      0,
+      1
+    ],
+    "stages": [
+      "loading",
+      "cached-data",
+      "fresh-data"
+    ]
+  },
+  "classicViewportPhases": {
+    "before-open": {
+      "bodyWidths": [
+        1424
+      ],
+      "frames": 1,
+      "mainX": [
+        122,
+        122
+      ],
+      "pageY": [
+        74
+      ]
+    },
+    "closed": {
+      "bodyWidths": [
+        1424
+      ],
+      "frames": 38,
+      "mainX": [
+        122,
+        122
+      ],
+      "pageY": [
+        74
+      ]
+    },
+    "open": {
+      "bodyWidths": [
+        1424
+      ],
+      "frames": 155,
+      "mainX": [
+        122,
+        122
+      ],
+      "pageY": [
+        74
+      ]
+    }
+  },
+  "cases": [
+    {
+      "label": "baseline long intro classic16",
+      "metrics": {
+        "clientHeight": 550,
+        "frame": {
+          "bottom": 760,
+          "height": 620,
+          "left": 287,
+          "right": 1137,
+          "top": 140,
+          "width": 850,
+          "x": 287,
+          "y": 140
+        },
+        "notesBottom": 1329.34375,
+        "scrollBottom": 725,
+        "scrollHeight": 1203
+      }
+    },
+    {
+      "label": "final desktop long title after identity adjustment",
+      "metrics": {
+        "actions": {
+          "bottom": 720.15625,
+          "height": 41.59375,
+          "left": 335,
+          "right": 1097,
+          "top": 678.5625,
+          "width": 762,
+          "x": 335,
+          "y": 678.5625
+        },
+        "bodyWidth": 1440,
+        "focus": "",
+        "frame": {
+          "bottom": 750,
+          "height": 600,
+          "left": 300,
+          "right": 1140,
+          "top": 150,
+          "width": 840,
+          "x": 300,
+          "y": 150
+        },
+        "identity": {
+          "bottom": 381,
+          "height": 200,
+          "left": 335,
+          "right": 1105,
+          "top": 181,
+          "width": 770,
+          "x": 335,
+          "y": 181
+        },
+        "intro": {
+          "client": 86,
+          "expanded": "false",
+          "height": 518,
+          "hidden": false,
+          "lineHeight": "21.6px",
+          "rect": {
+            "bottom": 520.5703125,
+            "height": 86.375,
+            "left": 335,
+            "right": 1097,
+            "top": 434.1953125,
+            "width": 762,
+            "x": 335,
+            "y": 434.1953125
+          }
+        },
+        "main": {
+          "bottom": 1352.9296875,
+          "height": 1348.9296875,
+          "left": 130,
+          "right": 1310,
+          "top": 4,
+          "width": 1180,
+          "x": 130,
+          "y": 4
+        },
+        "pageScrollWidth": 1440,
+        "pageY": 74,
+        "progress": {
+          "bottom": 372.0390625,
+          "height": 19.1953125,
+          "left": 465,
+          "right": 1063,
+          "top": 352.84375,
+          "width": 598,
+          "x": 465,
+          "y": 352.84375
+        },
+        "scroll": {
+          "client": 326,
+          "height": 326,
+          "rect": {
+            "bottom": 725,
+            "height": 326,
+            "left": 335,
+            "right": 1105,
+            "top": 399,
+            "width": 770,
+            "x": 335,
+            "y": 399
+          },
+          "top": 0
+        },
+        "stats": {
+          "bottom": 678.5625,
+          "height": 113.3984375,
+          "left": 335,
+          "right": 1097,
+          "top": 565.1640625,
+          "width": 762,
+          "x": 335,
+          "y": 565.1640625
+        },
+        "viewport": [
+          1440,
+          900
+        ]
+      }
+    },
+    {
+      "label": "final desktop classic16 collapsed accepted",
+      "metrics": {
+        "actions": {
+          "bottom": 720.15625,
+          "height": 41.59375,
+          "left": 327,
+          "right": 1073,
+          "top": 678.5625,
+          "width": 746,
+          "x": 327,
+          "y": 678.5625
+        },
+        "bodyWidth": 1424,
+        "focus": "",
+        "frame": {
+          "bottom": 750,
+          "height": 600,
+          "left": 292,
+          "right": 1132,
+          "top": 150,
+          "width": 840,
+          "x": 292,
+          "y": 150
+        },
+        "identity": {
+          "bottom": 381,
+          "height": 200,
+          "left": 327,
+          "right": 1097,
+          "top": 181,
+          "width": 770,
+          "x": 327,
+          "y": 181
+        },
+        "intro": {
+          "client": 86,
+          "expanded": "false",
+          "height": 540,
+          "hidden": false,
+          "lineHeight": "21.6px",
+          "rect": {
+            "bottom": 520.5703125,
+            "height": 86.375,
+            "left": 327,
+            "right": 1073,
+            "top": 434.1953125,
+            "width": 746,
+            "x": 327,
+            "y": 434.1953125
+          }
+        },
+        "main": {
+          "bottom": 1352.9296875,
+          "height": 1348.9296875,
+          "left": 122,
+          "right": 1302,
+          "top": 4,
+          "width": 1180,
+          "x": 122,
+          "y": 4
+        },
+        "pageScrollWidth": 1424,
+        "pageY": 74,
+        "progress": {
+          "bottom": 339.5390625,
+          "height": 19.1953125,
+          "left": 457,
+          "right": 1055,
+          "top": 320.34375,
+          "width": 598,
+          "x": 457,
+          "y": 320.34375
+        },
+        "scroll": {
+          "client": 326,
+          "height": 326,
+          "rect": {
+            "bottom": 725,
+            "height": 326,
+            "left": 327,
+            "right": 1097,
+            "top": 399,
+            "width": 770,
+            "x": 327,
+            "y": 399
+          },
+          "top": 0
+        },
+        "stats": {
+          "bottom": 678.5625,
+          "height": 113.3984375,
+          "left": 327,
+          "right": 1073,
+          "top": 565.1640625,
+          "width": 746,
+          "x": 327,
+          "y": 565.1640625
+        },
+        "viewport": [
+          1440,
+          900
+        ]
+      }
+    },
+    {
+      "label": "accepted phone final collapsed",
+      "metrics": {
+        "actions": {
+          "bottom": 675.15625,
+          "height": 41.59375,
+          "left": 33,
+          "right": 349,
+          "top": 633.5625,
+          "width": 316,
+          "x": 33,
+          "y": 633.5625
+        },
+        "bodyWidth": 390,
+        "focus": "",
+        "frame": {
+          "bottom": 752,
+          "height": 660,
+          "left": 16,
+          "right": 374,
+          "top": 92,
+          "width": 358,
+          "x": 16,
+          "y": 92
+        },
+        "identity": {
+          "bottom": 291,
+          "height": 180,
+          "left": 33,
+          "right": 357,
+          "top": 111,
+          "width": 324,
+          "x": 33,
+          "y": 111
+        },
+        "intro": {
+          "client": 86,
+          "expanded": "false",
+          "height": 1296,
+          "hidden": false,
+          "lineHeight": "21.6px",
+          "rect": {
+            "bottom": 424.5703125,
+            "height": 86.375,
+            "left": 33,
+            "right": 349,
+            "top": 338.1953125,
+            "width": 316,
+            "x": 33,
+            "y": 338.1953125
+          }
+        },
+        "main": {
+          "bottom": 1112.828125,
+          "height": 1150.328125,
+          "left": 18,
+          "right": 372,
+          "top": -37.5,
+          "width": 354,
+          "x": 18,
+          "y": -37.5
+        },
+        "pageScrollWidth": 390,
+        "pageY": 103.5,
+        "progress": {
+          "bottom": 274.1171875,
+          "height": 19.1953125,
+          "left": 121,
+          "right": 321,
+          "top": 254.921875,
+          "width": 200,
+          "x": 121,
+          "y": 254.921875
+        },
+        "scroll": {
+          "client": 434,
+          "height": 434,
+          "rect": {
+            "bottom": 737,
+            "height": 434,
+            "left": 33,
+            "right": 357,
+            "top": 303,
+            "width": 324,
+            "x": 33,
+            "y": 303
+          },
+          "top": 0
+        },
+        "stats": {
+          "bottom": 633.5625,
+          "height": 164.3984375,
+          "left": 33,
+          "right": 349,
+          "top": 469.1640625,
+          "width": 316,
+          "x": 33,
+          "y": 469.1640625
+        },
+        "viewport": [
+          390,
+          844
+        ]
+      }
+    },
+    {
+      "label": "accepted phone expanded after wheel",
+      "metrics": {
+        "actions": {
+          "bottom": 1040.40625,
+          "height": 41.59375,
+          "left": 33,
+          "right": 349,
+          "top": 998.8125,
+          "width": 316,
+          "x": 33,
+          "y": 998.8125
+        },
+        "bodyWidth": 390,
+        "focus": "intro-toggle",
+        "frame": {
+          "bottom": 752,
+          "height": 660,
+          "left": 16,
+          "right": 374,
+          "top": 92,
+          "width": 358,
+          "x": 16,
+          "y": 92
+        },
+        "identity": {
+          "bottom": 291,
+          "height": 180,
+          "left": 33,
+          "right": 357,
+          "top": 111,
+          "width": 324,
+          "x": 33,
+          "y": 111
+        },
+        "intro": {
+          "client": 1296,
+          "expanded": "true",
+          "height": 1296,
+          "hidden": false,
+          "lineHeight": "21.6px",
+          "rect": {
+            "bottom": 789.8203125,
+            "height": 1295.625,
+            "left": 33,
+            "right": 349,
+            "top": -505.8046875,
+            "width": 316,
+            "x": 33,
+            "y": -505.8046875
+          }
+        },
+        "main": {
+          "bottom": 1112.828125,
+          "height": 1150.328125,
+          "left": 18,
+          "right": 372,
+          "top": -37.5,
+          "width": 354,
+          "x": 18,
+          "y": -37.5
+        },
+        "pageScrollWidth": 390,
+        "pageY": 103.5,
+        "progress": {
+          "bottom": 274.1171875,
+          "height": 19.1953125,
+          "left": 121,
+          "right": 321,
+          "top": 254.921875,
+          "width": 200,
+          "x": 121,
+          "y": 254.921875
+        },
+        "scroll": {
+          "client": 434,
+          "height": 1585,
+          "rect": {
+            "bottom": 737,
+            "height": 434,
+            "left": 33,
+            "right": 357,
+            "top": 303,
+            "width": 324,
+            "x": 33,
+            "y": 303
+          },
+          "top": 844
+        },
+        "stats": {
+          "bottom": 998.8125,
+          "height": 164.3984375,
+          "left": 33,
+          "right": 349,
+          "top": 834.4140625,
+          "width": 316,
+          "x": 33,
+          "y": 834.4140625
+        },
+        "viewport": [
+          390,
+          844
+        ]
+      }
+    },
+    {
+      "label": "accepted phone collapsed after reading",
+      "metrics": {
+        "actions": {
+          "bottom": 675.15625,
+          "height": 41.59375,
+          "left": 33,
+          "right": 349,
+          "top": 633.5625,
+          "width": 316,
+          "x": 33,
+          "y": 633.5625
+        },
+        "bodyWidth": 390,
+        "focus": "intro-toggle",
+        "frame": {
+          "bottom": 752,
+          "height": 660,
+          "left": 16,
+          "right": 374,
+          "top": 92,
+          "width": 358,
+          "x": 16,
+          "y": 92
+        },
+        "identity": {
+          "bottom": 291,
+          "height": 180,
+          "left": 33,
+          "right": 357,
+          "top": 111,
+          "width": 324,
+          "x": 33,
+          "y": 111
+        },
+        "intro": {
+          "client": 86,
+          "expanded": "false",
+          "height": 1296,
+          "hidden": false,
+          "lineHeight": "21.6px",
+          "rect": {
+            "bottom": 424.5703125,
+            "height": 86.375,
+            "left": 33,
+            "right": 349,
+            "top": 338.1953125,
+            "width": 316,
+            "x": 33,
+            "y": 338.1953125
+          }
+        },
+        "main": {
+          "bottom": 1112.828125,
+          "height": 1150.328125,
+          "left": 18,
+          "right": 372,
+          "top": -37.5,
+          "width": 354,
+          "x": 18,
+          "y": -37.5
+        },
+        "pageScrollWidth": 390,
+        "pageY": 103.5,
+        "progress": {
+          "bottom": 274.1171875,
+          "height": 19.1953125,
+          "left": 121,
+          "right": 321,
+          "top": 254.921875,
+          "width": 200,
+          "x": 121,
+          "y": 254.921875
+        },
+        "scroll": {
+          "client": 434,
+          "height": 434,
+          "rect": {
+            "bottom": 737,
+            "height": 434,
+            "left": 33,
+            "right": 357,
+            "top": 303,
+            "width": 324,
+            "x": 33,
+            "y": 303
+          },
+          "top": 0
+        },
+        "stats": {
+          "bottom": 633.5625,
+          "height": 164.3984375,
+          "left": 33,
+          "right": 349,
+          "top": 469.1640625,
+          "width": 316,
+          "x": 33,
+          "y": 469.1640625
+        },
+        "viewport": [
+          390,
+          844
+        ]
+      }
+    },
+    {
+      "label": "accepted short phone scroll allowed",
+      "metrics": {
+        "actions": {
+          "bottom": 603.15625,
+          "height": 41.59375,
+          "left": 33,
+          "right": 349,
+          "top": 561.5625,
+          "width": 316,
+          "x": 33,
+          "y": 561.5625
+        },
+        "bodyWidth": 390,
+        "focus": "intro-toggle",
+        "frame": {
+          "bottom": 540,
+          "height": 520,
+          "left": 16,
+          "right": 374,
+          "top": 20,
+          "width": 358,
+          "x": 16,
+          "y": 20
+        },
+        "identity": {
+          "bottom": 219,
+          "height": 180,
+          "left": 33,
+          "right": 357,
+          "top": 39,
+          "width": 324,
+          "x": 33,
+          "y": 39
+        },
+        "intro": {
+          "client": 86,
+          "expanded": "false",
+          "height": 1296,
+          "hidden": false,
+          "lineHeight": "21.6px",
+          "rect": {
+            "bottom": 352.5703125,
+            "height": 86.375,
+            "left": 33,
+            "right": 349,
+            "top": 266.1953125,
+            "width": 316,
+            "x": 33,
+            "y": 266.1953125
+          }
+        },
+        "main": {
+          "bottom": 1112.828125,
+          "height": 1150.328125,
+          "left": 18,
+          "right": 372,
+          "top": -37.5,
+          "width": 354,
+          "x": 18,
+          "y": -37.5
+        },
+        "pageScrollWidth": 390,
+        "pageY": 103.5,
+        "progress": {
+          "bottom": 202.1171875,
+          "height": 19.1953125,
+          "left": 121,
+          "right": 321,
+          "top": 182.921875,
+          "width": 200,
+          "x": 121,
+          "y": 182.921875
+        },
+        "scroll": {
+          "client": 294,
+          "height": 376,
+          "rect": {
+            "bottom": 525,
+            "height": 294,
+            "left": 33,
+            "right": 357,
+            "top": 231,
+            "width": 324,
+            "x": 33,
+            "y": 231
+          },
+          "top": 0
+        },
+        "stats": {
+          "bottom": 561.5625,
+          "height": 164.3984375,
+          "left": 33,
+          "right": 349,
+          "top": 397.1640625,
+          "width": 316,
+          "x": 33,
+          "y": 397.1640625
+        },
+        "viewport": [
+          390,
+          560
+        ]
+      }
+    },
+    {
+      "label": "accepted ordinary short intro final",
+      "metrics": {
+        "actions": {
+          "bottom": 661.96875,
+          "height": 41.59375,
+          "left": 327.5,
+          "right": 1074.5,
+          "top": 620.375,
+          "width": 747,
+          "x": 327.5,
+          "y": 620.375
+        },
+        "bodyWidth": 1425,
+        "focus": "",
+        "frame": {
+          "bottom": 750,
+          "height": 600,
+          "left": 292.5,
+          "right": 1132.5,
+          "top": 150,
+          "width": 840,
+          "x": 292.5,
+          "y": 150
+        },
+        "identity": {
+          "bottom": 381,
+          "height": 200,
+          "left": 327.5,
+          "right": 1097.5,
+          "top": 181,
+          "width": 770,
+          "x": 327.5,
+          "y": 181
+        },
+        "intro": {
+          "client": 65,
+          "expanded": "false",
+          "height": 65,
+          "hidden": true,
+          "lineHeight": "21.6px",
+          "rect": {
+            "bottom": 498.9765625,
+            "height": 64.78125,
+            "left": 327.5,
+            "right": 1074.5,
+            "top": 434.1953125,
+            "width": 747,
+            "x": 327.5,
+            "y": 434.1953125
+          }
+        },
+        "main": {
+          "bottom": 1352.9296875,
+          "height": 1348.9296875,
+          "left": 122.5,
+          "right": 1302.5,
+          "top": 4,
+          "width": 1180,
+          "x": 122.5,
+          "y": 4
+        },
+        "pageScrollWidth": 1425,
+        "pageY": 74,
+        "progress": {
+          "bottom": 339.5390625,
+          "height": 19.1953125,
+          "left": 457.5,
+          "right": 1055.5,
+          "top": 320.34375,
+          "width": 598,
+          "x": 457.5,
+          "y": 320.34375
+        },
+        "scroll": {
+          "client": 326,
+          "height": 326,
+          "rect": {
+            "bottom": 725,
+            "height": 326,
+            "left": 327.5,
+            "right": 1097.5,
+            "top": 399,
+            "width": 770,
+            "x": 327.5,
+            "y": 399
+          },
+          "top": 0
+        },
+        "stats": {
+          "bottom": 620.375,
+          "height": 113.3984375,
+          "left": 327.5,
+          "right": 1074.5,
+          "top": 506.9765625,
+          "width": 747,
+          "x": 327.5,
+          "y": 506.9765625
+        },
+        "viewport": [
+          1440,
+          900
+        ]
+      }
+    }
+  ],
+  "desktopExpanded": {
+    "clientHeight": 326,
+    "scrollHeight": 779,
+    "scrollTop": 0,
+    "source": "root Chrome measurement after clicking 查看更多 on final classic16 page"
+  }
+}

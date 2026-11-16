@@ -133,7 +133,7 @@ tests/                离线单元与 HTTP 集成测试
 test_connection.py    只读搜索连通性测试
 ```
 
-改进建议与贡献见 [CONTRIBUTING.md](CONTRIBUTING.md)。范围保持本地单用户；阅读统计查询最近 12 个月，书架打开时自动同步。更长统计历史、自定义日期和更多导出格式可继续讨论。动态书架的完整需求和验收约定见 [设计文档](docs/dynamic-bookshelf.md)，当前详情布局见 [加载稳定性设计与验收](docs/detail-stability.md)。
+改进建议与贡献见 [CONTRIBUTING.md](CONTRIBUTING.md)。范围保持本地单用户；阅读统计查询最近 12 个月，书架打开时自动同步。更长统计历史、自定义日期和更多导出格式可继续讨论。动态书架的完整需求和验收约定见 [设计文档](docs/dynamic-bookshelf.md)，当前详情布局见 [书籍概览设计](docs/detail-overview.md) 与 [视觉验收](docs/detail-overview-acceptance.md)。
 
 ## 声明与许可
 

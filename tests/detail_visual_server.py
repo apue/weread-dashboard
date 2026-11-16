@@ -29,7 +29,9 @@ PROBE_JS = r'''(() => {
   if (slow > 1 && Element.prototype.animate) {
     const nativeAnimate = Element.prototype.animate;
     Element.prototype.animate = function (frames, options = {}) {
-      const next = typeof options === 'number' ? { duration: options * slow } : { ...options, duration: (options.duration || 0) * slow };
+      const next = typeof options === 'number' ? { duration: options * slow } : {
+        ...options, duration: (options.duration || 0) * slow, delay: (options.delay || 0) * slow
+      };
       return nativeAnimate.call(this, frames, next);
     };
   }
@@ -61,15 +63,31 @@ PROBE_JS = r'''(() => {
     const dialog = document.getElementById('book-dialog');
     const frame = dialog?.querySelector('.detail-frame') || dialog?.querySelector('.detail-sheet');
     const close = document.getElementById('detail-close');
+    const body = document.getElementById('detail-body');
+    const intro = document.getElementById('intro-copy');
+    const toggle = document.getElementById('intro-toggle');
     const c = close?.getBoundingClientRect();
     const r = frame?.getBoundingClientRect();
     const cs = frame ? getComputedStyle(frame) : null;
-    const body = document.getElementById('detail-body');
+    const introRect = intro?.getBoundingClientRect();
+    const toggleRect = toggle?.getBoundingClientRect();
+    const bodyRect = body?.getBoundingClientRect();
+    const summary = document.querySelector('#detail-summary, .detail-summary, .detail-stats');
+    const summaryRect = summary?.getBoundingClientRect();
     return {
       phase, time: Math.round(performance.now()), rootClientWidth: root.clientWidth,
       innerWidth: window.innerWidth, gutter: window.innerWidth - root.clientWidth,
       body: rect('body'), main: rect('main'), heading: rect('.shelf-heading, .page-heading'),
       bookWall: rect('#book-wall'), brand: rect('.brand'),
+      detailScroll: body ? { clientHeight:body.clientHeight, scrollHeight:body.scrollHeight, scrollTop:body.scrollTop, overflowY:getComputedStyle(body).overflowY } : null,
+      intro: intro ? { clientHeight:intro.clientHeight, scrollHeight:intro.scrollHeight,
+        collapsed:intro.classList.contains('is-collapsed'), expanded:toggle?.getAttribute('aria-expanded') === 'true',
+        toggleHidden:toggle?.hidden, toggleText:toggle?.textContent, toggleControls:toggle?.getAttribute('aria-controls'),
+        rect:introRect ? {left:introRect.left,top:introRect.top,right:introRect.right,bottom:introRect.bottom} : null,
+        toggleRect:toggleRect ? {left:toggleRect.left,top:toggleRect.top,right:toggleRect.right,bottom:toggleRect.bottom} : null } : null,
+      detailSummary: summaryRect ? {left:summaryRect.left,top:summaryRect.top,right:summaryRect.right,bottom:summaryRect.bottom} : null,
+      detailSummaryFullyVisible: !!(summaryRect && bodyRect && summaryRect.top >= bodyRect.top && summaryRect.bottom <= bodyRect.bottom),
+      detailSummaryReachable: !!(summaryRect && body && bodyRect && summaryRect.bottom > bodyRect.top && summaryRect.top < bodyRect.bottom + Math.max(0, body.scrollHeight - body.clientHeight)),
       card: r ? { left:r.left, top:r.top, right:r.right, bottom:r.bottom, width:frame.offsetWidth, height:frame.offsetHeight,
         centerX:(r.left+r.right)/2, centerY:(r.top+r.bottom)/2, opacity:cs.opacity, transform:cs.transform } : null,
       close: c ? { left:c.left, top:c.top, right:c.right, bottom:c.bottom } : null,
@@ -88,6 +106,11 @@ PROBE_JS = r'''(() => {
     write({ ...geometry('closed'), elapsed: Math.round(performance.now() - start) });
     if (performance.now() - start < 1500) requestAnimationFrame(() => sampleClosed(start, id));
   };
+  const sampleIntro = (start, id) => {
+    if (id !== generation) return;
+    write({ ...geometry('intro-toggle'), elapsed: Math.round(performance.now() - start) });
+    if (performance.now() - start < 1500) requestAnimationFrame(() => sampleIntro(start, id));
+  };
   document.addEventListener('click', event => {
     if (!event.target.closest('[data-book-id]')) return;
     samples.length = 0;
@@ -104,6 +127,12 @@ PROBE_JS = r'''(() => {
     const start = performance.now();
     requestAnimationFrame(() => sampleClosed(start, id));
   });
+  document.addEventListener('click', event => {
+    if (!event.target.closest('#intro-toggle')) return;
+    const id = ++generation;
+    const start = performance.now();
+    requestAnimationFrame(() => sampleIntro(start, id));
+  }, true);
 })();
 '''
 
@@ -207,7 +236,7 @@ def main():
     parser.add_argument('--long-intro', action='store_true', help='serve a long fictional book intro')
     parser.add_argument('--long-title', action='store_true', help='serve a long fictional book title')
     parser.add_argument('--slow-motion', type=float, default=1, help='multiply Element.animate durations in test page only')
-    parser.add_argument('--baseline-ref', choices=('c05d550', '567b3dc'), help='serve only a fixed baseline web UI revision')
+    parser.add_argument('--baseline-ref', choices=('c05d550', '567b3dc', '144aead'), help='serve only a fixed baseline web UI revision')
     parser.add_argument('--fail-sync-once', action='store_true', help='first authorized part=all sync returns 503; retry succeeds')
     parser.add_argument('--classic-scrollbar', action='store_true', help='inject a 16px WebKit scrollbar rule into this diagnostic page only')
     parser.add_argument('--zero-scrollbar', action='store_true', help='simulate a zero-width WebKit scrollbar on this diagnostic page only; not an OS overlay-scrollbar test')

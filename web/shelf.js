@@ -2,7 +2,7 @@
 (() => {
   const $ = id => document.getElementById(id);
   const escape = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  const state = { items: [], loaded: false, syncing: null, active: null, opener: null, openerContainerId: null, openScrollY: 0, detailToken: 0, detailCacheEpoch: 0, notesSyncing: false, savedCategory: null, detailCache: new Map(), closeAnimation: null, openAnimation: null, backdropAnimation: null };
+  const state = { items: [], loaded: false, syncing: null, active: null, opener: null, openerContainerId: null, openScrollY: 0, detailToken: 0, detailCacheEpoch: 0, notesSyncing: false, savedCategory: null, detailCache: new Map(), introExpanded: false, introObserver: null, lastIntroWidth: 0, introMeasureFrame: 0, closeAnimation: null, openAnimation: null, secondaryAnimation: null, backdropAnimation: null, sourceFeedback: null };
   const headers = {'X-WeRead-Client':'dashboard'};
   const time = value => value ? new Date(value).toLocaleString('zh-CN',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'}) : '';
   const api = async (url, options={}) => { const response=await fetch(url,options); const data=await response.json(); if(!response.ok)throw new Error(data.error||'请求失败'); return data; };
@@ -42,29 +42,58 @@
   }
   async function loadShelf(){try{showShelf(await api('/api/shelf'));}catch(e){$('shelf-status').textContent=e.message+'；可点击同步重试。';$('shelf-status').classList.add('error');}}
   async function syncShelf(){if(state.syncing)return state.syncing;const button=$('shelf-sync');button.disabled=true;$('shelf-status').textContent='正在同步书架…';state.syncing=api('/api/shelf/sync',{method:'POST',headers}).then(async data=>{showShelf(data);const recent=[...state.items].filter(x=>x.kind==='book'&&x.bookId&&dateValue(x)>0).sort((a,b)=>dateValue(b)-dateValue(a)).slice(0,4);await Promise.allSettled(recent.map(async item=>{const fresh=await api(`/api/book/sync?id=${encodeURIComponent(item.id)}&part=progress`,{method:'POST',headers});if(fresh.progress)item.progress=fresh.progress;}));render();}).catch(e=>{$('shelf-status').textContent=e.message+(state.items.length?' · 已保留上次书架':'');$('shelf-status').classList.add('error');}).finally(()=>{button.disabled=false;state.syncing=null;});return state.syncing;}
-  function detailMarkup(item,data){const info=data.info||{},progress=data.progress||item.progress,notes=data.notes;let sections='';
-    if(item.kind==='articles')return `<section><h3>收藏入口</h3><p>文章收藏已计入书架。此入口不代表文章正文或阅读进度，当前服务暂不读取文章内容。</p><small>${escape(item.category||'未分类')}</small></section>`;
-    if(item.kind==='album')return `<section><h3>有声书</h3><p>书架显示已知有声书元信息；当前不提供有声书章节进度与完读状态判断。</p><small>${escape(item.category||'未分类')}</small></section>`;
-    sections+=`<section><h3>简介</h3><p class="${!info.intro&&data.loading?'loading-intro':''}">${escape(info.intro||(data.loading?'正在读取简介…':'暂无简介'))}</p>${info.publisher?`<small>${escape(info.publisher)}${info.publishTime?' · '+escape(info.publishTime):''}</small>`:''}</section>`;
-    const rating=Number(info.newRating);
-    sections+=`<section><h3>微信读书推荐值</h3><p class="rating">${Number.isFinite(rating)&&rating>0?`${(rating/10).toFixed(1)}%`:data.loading?'正在读取推荐值…':'暂无推荐值'}${Number.isFinite(rating)&&rating>0&&info.newRatingCount!=null?` <small>（${escape(info.newRatingCount)} 人评价）</small>`:''}</p></section>`;
-    sections+=`<section><h3>阅读进度</h3><p>${progress&&Number.isFinite(progress.progress)?`已读 ${escape(progress.progress)}%`:item.finished===true?'已读完':data.loading?'正在读取阅读进度…':'进度暂不可用'}</p></section>`;
-    sections+=`<section><div class="notes-title"><h3>笔记与划线</h3><button class="text-button" id="notes-sync" ${state.notesSyncing?'disabled':''}>${state.notesSyncing?'同步中…':'同步笔记'}</button></div><p>${notes?`想法/点评 ${escape(notes.reviewCount)} · 书签 ${escape(notes.bookmarkCount)} · 划线 ${escape(notes.noteCount)} · 合计 ${escape(notes.total)}`:data.loading?'正在读取笔记与划线…':'笔记数量尚未同步'}</p></section>`;
-    if(data.errors?.length)sections+=`<p class="detail-error">${data.errors.map(escape).join(' · ')} <button class="text-button" id="detail-retry">重试</button></p>`;
-    const link=info.readerLink||info.deepLink||item.readerLink||item.deepLink;
-    if(link&&/^https:\/\//i.test(link)||link&&/^weread:\/\//i.test(link))sections+=`<a class="reader-link" href="${escape(link)}" target="_blank" rel="noopener">继续阅读 ↗</a>`;
+  function detailMarkup(item, data) {
+    const info = data.info || {};
+    const notes = data.notes;
+    const intro = info.intro || (data.loading ? '正在读取简介…' : '暂无简介');
+    let sections = '';
+
+    if (item.kind === 'articles') {
+      sections += `<section class="entry-note"><h3>收藏入口</h3><p>文章收藏已计入书架。此入口不代表文章正文或阅读进度，当前服务暂不读取文章内容。</p><small>${escape(item.category || '未分类')}</small></section>`;
+    } else if (item.kind === 'album') {
+      sections += `<section class="entry-note"><h3>有声书</h3><p>书架显示已知有声书元信息；当前不提供有声书章节进度与完读状态判断。</p><small>${escape(item.category || '未分类')}</small></section>`;
+    } else {
+      sections += `<section class="intro-section"><h3>简介</h3><p id="intro-copy" class="intro-copy ${state.introExpanded ? '' : 'is-collapsed'} ${!info.intro && data.loading ? 'loading-intro' : ''}">${escape(intro)}</p><button id="intro-toggle" class="text-button intro-toggle" type="button" aria-controls="intro-copy" aria-expanded="${state.introExpanded}" hidden>${state.introExpanded ? '收起' : '查看更多'}</button></section>`;
+      const rating = Number(info.newRating);
+      const ratingText = Number.isFinite(rating) && rating > 0
+        ? `${(rating / 10).toFixed(1)}%`
+        : data.loading ? '读取中…' : '暂无';
+      const reviews = Number.isFinite(rating) && rating > 0 && info.newRatingCount != null
+        ? `${escape(info.newRatingCount)} 人评价`
+        : '';
+      const noteValue = key => notes && notes[key] != null
+        ? escape(notes[key])
+        : data.loading ? '读取中…' : '未同步';
+      sections += `<section class="detail-stats" aria-label="推荐值与笔记统计"><div class="stat-cell rating-cell"><span class="stat-label">推荐值</span><strong>${ratingText}</strong><small>${reviews}</small></div><div class="stat-cell"><span class="stat-label">想法/点评</span><strong>${noteValue('reviewCount')}</strong></div><div class="stat-cell"><span class="stat-label">书签</span><strong>${noteValue('bookmarkCount')}</strong></div><div class="stat-cell"><span class="stat-label">划线</span><strong>${noteValue('noteCount')}</strong></div><small class="notes-total">合计 ${noteValue('total')}</small></section>`;
+    }
+
+    if (data.errors?.length) {
+      sections += `<p class="detail-error">${data.errors.map(escape).join(' · ')} <button class="text-button" id="detail-retry">重试</button></p>`;
+    }
+    const link = info.readerLink || info.deepLink || item.readerLink || item.deepLink;
+    sections += '<div class="detail-actions">';
+    if (item.kind === 'book') {
+      sections += `<button class="button notes-sync" id="notes-sync" ${state.notesSyncing ? 'disabled' : ''}>${state.notesSyncing ? '同步笔记中…' : '同步笔记与划线'}</button>`;
+    }
+    if (link && (/^https:\/\//i.test(link) || /^weread:\/\//i.test(link))) {
+      sections += `<a class="reader-link" href="${escape(link)}" target="_blank" rel="noopener">继续阅读 ↗</a>`;
+    }
+    sections += '</div>';
     return sections;
   }
-  function animate(element, frames, duration, key) {
+
+  function animate(element, frames, duration, key, delay = 0) {
     state[key]?.cancel?.();
     state[key] = null;
     if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
       frames = frames.map(frame => ({ opacity: frame.opacity }));
       duration = 80;
+      delay = 0;
     }
     if (typeof element.animate === 'function') {
       const animation = element.animate(frames, {
         duration,
+        delay,
         easing: 'ease-in-out',
         fill: 'both'
       });
@@ -93,12 +122,12 @@
       timer = setTimeout(() => {
         if (state[key] === fallback) state[key] = null;
         resolve();
-      }, duration);
+      }, duration + delay);
     });
   }
 
   const openFrames = [
-    { opacity: 0, transform: 'scale(.99)' },
+    { opacity: 0, transform: 'scale(.985)' },
     { opacity: 1, transform: 'scale(1)' }
   ];
   const closeFrames = [
@@ -118,7 +147,73 @@
   }
 
   function renderDetail(item, data) {
-    $('detail-body').innerHTML = detailMarkup(item, data);
+    const body = $('detail-body');
+    const scrollTop = body.scrollTop;
+    const restoreToggleFocus = document.activeElement?.id === 'intro-toggle';
+    body.innerHTML = detailMarkup(item, data);
+    renderIdentity(item, data);
+    body.scrollTop = scrollTop;
+    refreshIntroMeasurement();
+    if (restoreToggleFocus) {
+      const toggle = $('intro-toggle');
+      if (toggle && !toggle.hidden) toggle.focus({ preventScroll: true });
+      else $('book-dialog').querySelector('.detail-frame').focus({ preventScroll: true });
+    }
+  }
+
+  function renderIdentity(item, data) {
+    const info = data.info || {};
+    const progress = data.progress || item.progress;
+    $('detail-title').textContent = item.title || '未命名';
+    $('detail-title').title = item.title || '未命名';
+    $('detail-author').textContent = item.author || '作者未知';
+    $('detail-author').title = item.author || '作者未知';
+    $('detail-kind').textContent = ({ book: '电子书', album: '有声书', articles: '文章收藏' })[item.kind] || '书籍';
+    const publisher = [info.publisher, info.publishTime].filter(Boolean).join(' · ');
+    $('detail-publisher').textContent = publisher || (data.loading ? '出版信息读取中…' : '暂无出版信息');
+    $('detail-publisher').title = publisher;
+    $('detail-progress').textContent = progress && Number.isFinite(progress.progress)
+      ? `阅读进度 · 已读 ${progress.progress}%`
+      : item.finished === true ? '阅读进度 · 已读完'
+        : data.loading ? '阅读进度 · 正在读取…' : '阅读进度暂不可用';
+  }
+
+  function refreshIntroMeasurement() {
+    if (!$('book-dialog').open) return;
+    const copy = $('intro-copy');
+    const button = $('intro-toggle');
+    if (!copy || !button) return;
+    const lineHeight = Number.parseFloat(getComputedStyle(copy).lineHeight);
+    const collapsedHeight = Number.isFinite(lineHeight) ? lineHeight * 4 : copy.clientHeight;
+    const overflowing = state.introExpanded
+      ? copy.scrollHeight > collapsedHeight + 1
+      : copy.scrollHeight > copy.clientHeight + 1;
+    if (!overflowing) state.introExpanded = false;
+    copy.classList.toggle('is-collapsed', !state.introExpanded);
+    button.hidden = !overflowing;
+    button.setAttribute('aria-expanded', String(state.introExpanded && overflowing));
+    button.textContent = state.introExpanded && overflowing ? '收起' : '查看更多';
+  }
+
+  function scheduleIntroMeasurement() {
+    cancelAnimationFrame(state.introMeasureFrame);
+    state.introMeasureFrame = requestAnimationFrame(refreshIntroMeasurement);
+  }
+
+  function toggleIntro() {
+    const copy = $('intro-copy');
+    const button = $('intro-toggle');
+    const body = $('detail-body');
+    if (!copy || !button || button.hidden) return;
+    state.introExpanded = !state.introExpanded;
+    copy.classList.toggle('is-collapsed', !state.introExpanded);
+    button.setAttribute('aria-expanded', String(state.introExpanded));
+    button.textContent = state.introExpanded ? '收起' : '查看更多';
+    button.focus({ preventScroll: true });
+    if (!state.introExpanded) {
+      button.scrollIntoView?.({ block: 'nearest', behavior: 'instant' });
+      body.scrollTop = Math.max(0, Math.min(body.scrollTop, body.scrollHeight - body.clientHeight));
+    }
   }
 
   async function openDetail(item, opener) {
@@ -134,6 +229,11 @@
     state.closeAnimation = null;
     state.openAnimation?.cancel();
     state.openAnimation = null;
+    state.secondaryAnimation?.cancel();
+    state.secondaryAnimation = null;
+    state.sourceFeedback?.cancel();
+    state.sourceFeedback = null;
+    state.introExpanded = false;
     state.active = item;
     state.opener = opener;
     state.openerContainerId = opener?.closest('#book-wall')?.id ||
@@ -143,20 +243,29 @@
     const token = ++state.detailToken;
     const cacheEpoch = state.detailCacheEpoch;
     const cached = state.detailCache.get(item.id);
-    $('detail-title').textContent = item.title || '未命名';
-    $('detail-author').textContent = item.author || '作者未知';
-    $('detail-kind').textContent = ({ book: '电子书', album: '有声书', articles: '文章收藏' })[item.kind] || '书籍';
     $('detail-cover-wrap').innerHTML = `<div class="detail-cover">${cover(item)}</div>`;
     wireCoverErrors($('detail-cover-wrap'));
     renderDetail(item, cached ? { ...cached, loading: false } : {
-      info: null, progress: item.progress, notes: null, loading: true
+      info: null,
+      progress: item.progress,
+      notes: null,
+      loading: item.kind === 'book'
     });
 
     if (!dialog.open) dialog.showModal();
     document.body.classList.add('dialog-open');
+    refreshIntroMeasurement();
     requestAnimationFrame(() => frame.focus({ preventScroll: true }));
+    if (opener) {
+      animate(opener, [
+        { transform: 'scale(1)' }, { transform: 'scale(.985)' }, { transform: 'scale(1)' }
+      ], 90, 'sourceFeedback');
+    }
     if (!reopening) {
-      animate(frame, openFrames, 300, 'openAnimation');
+      animate(frame, openFrames, 320, 'openAnimation', 40);
+      animate(dialog.querySelector('.detail-copy'), [
+        { opacity: 0 }, { opacity: 1 }
+      ], 200, 'secondaryAnimation', 100);
     }
     animate(dialog.querySelector('.dialog-backdrop'), [
       { opacity: 0 }, { opacity: 1 }
@@ -229,6 +338,10 @@
     if (!dialog.open || state.closeAnimation) return;
     state.openAnimation?.cancel?.();
     state.openAnimation = null;
+    state.secondaryAnimation?.cancel?.();
+    state.secondaryAnimation = null;
+    state.sourceFeedback?.cancel?.();
+    state.sourceFeedback = null;
     const frame = dialog.querySelector('.detail-frame');
     const token = ++state.detailToken;
     let focusTarget = state.opener?.isConnected ? state.opener : null;
@@ -261,7 +374,7 @@
     const button = $('notes-sync');
     if (button) {
       button.disabled = true;
-      button.textContent = '同步中…';
+      button.textContent = '同步笔记中…';
     }
     try {
       await api('/api/notes/sync', { method: 'POST', headers });
@@ -284,12 +397,23 @@
       const currentButton = $('notes-sync');
       if (currentButton) {
         currentButton.disabled = false;
-        currentButton.textContent = '同步笔记';
+        currentButton.textContent = '同步笔记与划线';
       }
     }
   }
   function init(){
     $('sync').hidden=true;$('updated').hidden=true;
+    if (typeof ResizeObserver === 'function') {
+      state.introObserver = new ResizeObserver(entries => {
+        const width = entries[0]?.contentRect?.width || $('detail-body').clientWidth;
+        if (Math.abs(width - state.lastIntroWidth) < 1) return;
+        state.lastIntroWidth = width;
+        scheduleIntroMeasurement();
+      });
+      state.introObserver.observe($('detail-body'));
+    }
+    window.addEventListener?.('resize', scheduleIntroMeasurement);
+    document.fonts?.ready?.then(scheduleIntroMeasurement);
     $('view-shelf').addEventListener('click',()=>{$('shelf-view').hidden=false;$('stats-view').hidden=true;$('sync').hidden=true;$('updated').hidden=true;$('view-shelf').classList.add('active');$('view-stats').classList.remove('active');$('view-shelf').setAttribute('aria-pressed','true');$('view-stats').setAttribute('aria-pressed','false');});
     $('view-stats').addEventListener('click',()=>{$('shelf-view').hidden=true;$('stats-view').hidden=false;$('sync').hidden=false;$('updated').hidden=false;$('view-stats').classList.add('active');$('view-shelf').classList.remove('active');$('view-stats').setAttribute('aria-pressed','true');$('view-shelf').setAttribute('aria-pressed','false');});
     const preferences=['shelf-sort','shelf-category','shelf-kind','shelf-finished'];try{preferences.forEach(id=>{const value=localStorage.getItem(id);if(value){if(id==='shelf-category')state.savedCategory=value;else if([...$(id).options].some(o=>o.value===value))$(id).value=value;}});}catch{}
@@ -297,7 +421,7 @@
     ['shelf-search',...preferences].forEach(id=>$(id).addEventListener(id==='shelf-search'?'input':'change',()=>{render();persist();}));
     $('shelf-reset').addEventListener('click',resetFilters);$('shelf-empty-reset').addEventListener('click',resetFilters);function resetFilters(){$('shelf-search').value='';$('shelf-sort').value='recent';$('shelf-category').value='all';$('shelf-kind').value='all';$('shelf-finished').value='all';render();try{preferences.forEach(id=>localStorage.removeItem(id));}catch{}}
     $('shelf-sync').addEventListener('click',syncShelf);$('shelf-empty-sync').addEventListener('click',syncShelf);
-    document.addEventListener('click',event=>{const card=event.target.closest('[data-book-id]');if(card){const item=state.items.find(x=>x.id===card.dataset.bookId);if(item)openDetail(item,card);return;}if(event.target.closest('#notes-sync'))syncNotes();if(event.target.closest('#detail-retry')&&state.active)refreshDetail(state.active);});
+    document.addEventListener('click',event=>{const card=event.target.closest('[data-book-id]');if(card){const item=state.items.find(x=>x.id===card.dataset.bookId);if(item)openDetail(item,card);return;}if(event.target.closest('#intro-toggle'))toggleIntro();if(event.target.closest('#notes-sync'))syncNotes();if(event.target.closest('#detail-retry')&&state.active)refreshDetail(state.active);});
     $('detail-close').addEventListener('click',closeDetail);$('book-dialog').addEventListener('click',e=>{if(e.target.hasAttribute('data-close'))closeDetail();});$('book-dialog').addEventListener('cancel',e=>{e.preventDefault();closeDetail();});
     loadShelf().finally(()=>syncShelf());
   }
